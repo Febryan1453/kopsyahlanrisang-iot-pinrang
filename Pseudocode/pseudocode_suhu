@@ -1,0 +1,52 @@
+REF : https://www.ekrut.com/media/pseudocode-adalah
+
+Judul 
+Mengukur suhu air tambak udang windu
+
+Deskripsi
+#include <ESP8266WiFi.h>		: Library
+#include <FirebaseArduino.h>	: Library
+#include <OneWire.h>			: Library
+#include <DallasTemperature.h>	: Library
+
+Deklarasi
+#define FIREBASE_HOST ""
+#define FIREBASE_AUTH ""
+#define WIFI_SSID ""
+#define WIFI_PASSWORD ""
+#define ONE_WIRE_BUS_ATAS		: Pin
+#define ONE_WIRE_BUS_BAWAH		: Pin
+var suhuAirAtas, suhuAirBawah	: float
+
+Implementasi
+READ : WIFI_SSID, WIFI_PASSWORD, FIREBASE_HOST, FIREBASE_AUTH, suhuAirAtas, suhuAirBawah
+
+WiFi.begin(WIFI_SSID, WIFI_PASSWORD)
+PRINT "Connecting"
+
+WHILE (WiFi.status() != WL_CONNECTED)
+    PRINT "."
+ENDWHILE
+
+PRINT "Connected: "
+PRINTLN WiFi.localIP
+Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH)
+
+SuhuAtas.requestTemperatures()
+suhuAirAtas = SuhuAtas.getTempCByIndex(0)
+PRINT "Suhu Air Atas: "
+PRINTLN suhuAirAtas
+
+SuhuBawah.requestTemperatures()
+suhuAirBawah = SuhuABawah.getTempCByIndex(0)
+PRINT "Suhu Air Bawah: "
+PRINTLN suhuAirBawah
+
+Firebase.setFloat("SuhuAtas", suhuAirAtas)
+Firebase.setFloat("SuhuBawah", suhuAirBawah)
+
+IF(Firebase.failed()) THEN
+  PRINT "Setting / Number Failed: "
+  PRINTLN Firebase.error() 
+ENDIF
+

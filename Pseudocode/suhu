@@ -1,0 +1,71 @@
+#include <ESP8266WiFi.h>
+#include <FirebaseArduino.h>
+
+// Suhu Air
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+// Set these to run example.
+#define FIREBASE_HOST "testing-8266-3c654-default-rtdb.asia-southeast1.firebasedatabase.app"
+#define FIREBASE_AUTH "8TIVaLnqz5cYW1833NzlCFdxsnDVeThaSYl9X3ha"
+#define WIFI_SSID "PDTI"
+#define WIFI_PASSWORD "pdti1234"
+
+#define ONE_WIRE_BUS_ATAS 2
+OneWire oneWireAtas(ONE_WIRE_BUS_ATAS);
+DallasTemperature SuhuAtas(&oneWireAtas);
+
+#define ONE_WIRE_BUS_BAWAH 4
+OneWire oneWireBawah(ONE_WIRE_BUS_BAWAH);
+DallasTemperature SuhuBawah(&oneWireBawah);
+
+// Suhu Air
+float suhuAirAtas;
+float suhuAirBawah;
+
+void setup() {
+
+  Serial.begin(9600);
+  Serial.begin(115200);
+  SuhuAtas.begin();
+  SuhuBawah.begin();
+
+  // connect to wifi.
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("connecting");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+
+  Serial.println();
+  Serial.print("connected: ");
+  Serial.println(WiFi.localIP());
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+}
+
+
+void loop() {
+
+  SuhuAtas.requestTemperatures();
+  suhuAirAtas = SuhuAtas.getTempCByIndex(0);
+  Serial.print("Suhu Air Atas: ");
+  Serial.println(suhuAirAtas);
+
+  SuhuBawah.requestTemperatures();
+  suhuAirBawah = SuhuABawah.getTempCByIndex(0);
+  Serial.print("Suhu Air Bawah: ");
+  Serial.println(suhuAirBawah);
+
+  Firebase.setFloat("Data/SuhuAtas", suhuAirAtas);
+  Firebase.setFloat("Data/SuhuBawah", suhuAirBawah);
+
+  // handle error
+  if (Firebase.failed()) {
+      Serial.print("setting /number failed:");
+      Serial.println(Firebase.error());  
+      return;
+  }
+  
+  delay(1000);
+}
