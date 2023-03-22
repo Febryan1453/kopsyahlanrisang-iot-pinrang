@@ -1,0 +1,30 @@
+Judul:
+Menampilkan data suhu pada web apps
+
+Deskripsi:
+import Kreait\Firebase\Factory;		      : Library
+import Kreait\Firebase\ServiceAccount;	: Library
+
+Deklarasi:
+$auth;
+$database;
+$suhuAtas;
+$suhuBawah;
+
+Implementasi:
+READ : $auth, $database, $suhuAtas, $suhuBawah
+
+$auth = (new Factory)
+        ->withServiceAccount(__DIR__ . '/FIREBASE-CREDENTIALS.JSON')
+        ->withDatabaseUri('URL_FIREBASE_DATABASE');
+
+IF($auth) THEN
+   $database = $auth->createDatabase();
+   $suhuAtas = $database->getReference('suhu_atas')->getValue();
+   $suhuBawah = $database->getReference('suhu_bawah')->getValue();
+ELSE
+   RETURN "INVALID SERVICE ACCOUNT";
+ENDIF
+
+ECHO $suhuAtas;
+ECHO $suhuBawah;
