@@ -2,7 +2,7 @@ Judul:
 Menampilkan data suhu pada web apps
 
 Deskripsi:
-import Kreait\Firebase\Factory;		      : Library
+import Kreait\Firebase\Factory;		: Library
 import Kreait\Firebase\ServiceAccount;	: Library
 
 Deklarasi:
